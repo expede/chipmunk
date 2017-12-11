@@ -1,48 +1,93 @@
-name:                chipmunk
-version:             0.1.0.0
-github:              expede/chipmunk
-license:             BSD3
-author:              Brooklyn Zelenka
-maintainer:          be.zelenka@gmail.com
-copyright:           2017 Brooklyn Zelenka
-
+name: chipmunk
+version: '0.0.0.1'
+category: TODO
+author: Brooklyn Zelenka
+maintainer: be.zelenka@gmail.com
+copyright: © 2017 Brooklyn Zelenka
+license: MIT
+license-file: LICENSE
+github: expede/chipmunk
+tested-with: GHC==8.0.1 GHC==8.0.2 GHC==8.2.1
 extra-source-files:
-- README.md
-- ChangeLog.md
+  - README.md
+  - CHANGELOG.md
 
-# Metadata used when publishing your package
-synopsis:            Short description of your package
-# category:            Web
-
-# To avoid duplicated efforts in documentation and dealing with the
-# complications of embedding Haddock markup inside cabal files, it is
-# common to point users to the README.md file.
-description:         Please see the README on Github at <https://github.com/expede/chipmunk#readme>
+ghc-options:
+  - -Wall
+  # as recommended in:
+  # https://functor.tokyo/blog/2017-07-28-ghc-warnings-you-should-enable
+  - -Wincomplete-uni-patterns
+  - -Wincomplete-record-updates
 
 dependencies:
-- base >= 4.7 && < 5
+  - base
+  - classy-prelude
+  - errors
+  - flow
+  - lens
+  - mtl
+  - time
 
 library:
   source-dirs: src
+  exposed-modules:
+    - Chipmunk
 
-executables:
-  chipmunk-exe:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - chipmunk
+# executables:
+#   app:
+#     main: Main.hs
+#     source-dirs: app
+#     dependencies:
+#       - chipmunk
 
 tests:
   chipmunk-test:
-    main:                Spec.hs
-    source-dirs:         test
+    main: Driver.hs
+    source-dirs:
+      - test
     ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -O2
     dependencies:
-    - chipmunk
+      - flow
+      - hspec
+      - hspec-discover
+      - monad-mock
+      - tasty
+      - tasty-discover >= 4.1
+      - tasty-hunit
+      - tasty-hspec
+      - tasty-smallcheck
+      - tasty-rerun
+      - chipmunk
+
+  chipmunk-doctest:
+    main: Doctest.hs
+    source-dirs: test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -O2
+    dependencies:
+      - doctest
+      - Glob
+      - QuickCheck
+      - chipmunk
+
+benchmarks:
+  chipmunk-benchmark:
+    main: Main.hs
+    source-dirs: benchmark
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -O2
+    dependencies:
+      - criterion
+      - chipmunk
+
+stability: alpha (experimental)
