@@ -4,7 +4,6 @@ module Chipmunk.Display where
 
 import           ClassyPrelude
 
-
 {- Display
 
 ==============
@@ -42,11 +41,3 @@ Example:
 +--------+----------+------+
 
 -}
-
-
-data Mode
-  = Standard
-  | ETI_Tall
-  | ETI_Square
-
-data Standard = Stadard

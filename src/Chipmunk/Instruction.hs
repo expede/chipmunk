@@ -1,7 +1,8 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Chipmunk where
+module Chipmunk.Instruction where
 
+import qualified Chipmunk.Memory as Memory
 import           ClassyPrelude
 
 {- Instructions
@@ -220,3 +221,26 @@ Fx75 - LD R, Vx
 Fx85 - LD Vx, R
 
 -}
+
+data Instruction
+  = Ignore                                                  -- 0nnn
+  | ClearDisplay                                            -- 00E0
+  | ReturnFromSubroutine                                    -- 00EE
+  | JumpTo                    Memory.Address                -- 1nnn
+  | CallSubroutineAt          Memory.Address                -- 2nnn
+  | SkipIfAddressEqualVal     Memory.Address Word8          -- 3xkk
+  | SkipIfAddressNotEqualVal  Memory.Address Word8          -- 4xkk
+  | SkipIfAddressValsEqual    Memory.Address Memory.Address -- 5xy0
+  | SetAddressTo              Memory.Address Word8          -- 6xkk
+  | AddValToAddress           Memory.Address Word8          -- 7xkk
+  | ReplaceWithAddressVal     Memory.Address Memory.Address -- 8xy0
+  | OrAddressVals             Memory.Address Memory.Address -- 8xy1
+  | AndAddressVals            Memory.Address Memory.Address -- 8xy2
+  | XorAddressVals            Memory.Address Memory.Address -- 8xy3
+  | AddAddressVals            Memory.Address Memory.Address -- 8xy4
+  | SubtractAddressVals       Memory.Address Memory.Address -- 8xy5
+  | RightShiftAddress         Memory.Address                -- 8xy6
+  | SubtractAddressValFrom    Memory.Address Memory.Address -- 8xy7
+  | LeftShiftAddress          Memory.Address                -- 8xyE
+  | SkipIfAddressValsNotEqual Memory.Address Memory.Address -- 9xy0
+  | SetITo                    Word8                         -- Annn

@@ -1,6 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Chipmunk where
+module Chipmunk.Timer where
 
 import           ClassyPrelude
 
