@@ -4,6 +4,7 @@ module Chipmunk.Instruction where
 
 import qualified Chipmunk.Memory as Memory
 import           ClassyPrelude
+import           Data.Word
 
 {- Instructions
 
@@ -243,4 +244,4 @@ data Instruction
   | SubtractAddressValFrom    Memory.Address Memory.Address -- 8xy7
   | LeftShiftAddress          Memory.Address                -- 8xyE
   | SkipIfAddressValsNotEqual Memory.Address Memory.Address -- 9xy0
-  | SetITo                    Word8                         -- Annn
+  | SetITo                    Word16                        -- Annn
