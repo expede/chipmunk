@@ -41,3 +41,8 @@ Example:
 +--------+----------+------+
 
 -}
+
+data Resolution
+  = Default -- 64x32
+  | Tall    -- 64x48
+  | Square  -- 64x64

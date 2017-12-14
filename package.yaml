@@ -27,7 +27,6 @@ dependencies:
   - lens
   - matrices
   - mtl
-  - time
 
 library:
   source-dirs: src

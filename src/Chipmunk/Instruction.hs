@@ -3,8 +3,8 @@
 module Chipmunk.Instruction where
 
 import qualified Chipmunk.Memory as Memory
+import           Chipmunk.Unit
 import           ClassyPrelude
-import           Data.Word
 
 {- Instructions
 
@@ -14,28 +14,6 @@ The Super CHIP-8 adds 10 more (ie: 46).
 All instructions are 2-bytes long, and big-endian.
 
 If a sprite is included, it should be padded to aline with RAM.
-
-==========
-= Legend =
-==========
-
-+-------------+------+-------------------------------+
-| Variable    | Bits | Description                   |
-+-------------+------+-------------------------------+
-| nnn or addr | 12   | Lowest 12 bits                |
-| kk or byte  | 8    | Lowest 8 bits                 |
-| n or nibble | 4    | Lowest 4 bits                 |
-| x           | 4    | Lower 4 bits of the high byte |
-| y           | 4    | Upper 4 bits of the low byte  |
-+-------------+------+-------------------------------+
-
-                           ---- Nibble
-                      --------- Byte
-               ---------------- Addr
-          0000 0000   0000 0000
-High Byte ---------   --------- Low Byte
-               ----   ----
-                X      Y
 
 ================
 = Instructions =
@@ -224,24 +202,38 @@ Fx85 - LD Vx, R
 -}
 
 data Instruction
-  = Ignore                                                  -- 0nnn
-  | ClearDisplay                                            -- 00E0
-  | ReturnFromSubroutine                                    -- 00EE
-  | JumpTo                    Memory.Address                -- 1nnn
-  | CallSubroutineAt          Memory.Address                -- 2nnn
-  | SkipIfAddressEqualVal     Memory.Address Word8          -- 3xkk
-  | SkipIfAddressNotEqualVal  Memory.Address Word8          -- 4xkk
-  | SkipIfAddressValsEqual    Memory.Address Memory.Address -- 5xy0
-  | SetAddressTo              Memory.Address Word8          -- 6xkk
-  | AddValToAddress           Memory.Address Word8          -- 7xkk
-  | ReplaceWithAddressVal     Memory.Address Memory.Address -- 8xy0
-  | OrAddressVals             Memory.Address Memory.Address -- 8xy1
-  | AndAddressVals            Memory.Address Memory.Address -- 8xy2
-  | XorAddressVals            Memory.Address Memory.Address -- 8xy3
-  | AddAddressVals            Memory.Address Memory.Address -- 8xy4
-  | SubtractAddressVals       Memory.Address Memory.Address -- 8xy5
-  | RightShiftAddress         Memory.Address                -- 8xy6
-  | SubtractAddressValFrom    Memory.Address Memory.Address -- 8xy7
-  | LeftShiftAddress          Memory.Address                -- 8xyE
-  | SkipIfAddressValsNotEqual Memory.Address Memory.Address -- 9xy0
-  | SetITo                    Word16                        -- Annn
+  = Ignore                                                         -- 0x0NNN
+  | ClearDisplay                                                   -- 0x00e0
+  | ReturnFromSubroutine                                           -- 0x00ee
+  | JumpTo                    Memory.Address                       -- 0x1NNN
+  | CallSubroutineAt          Memory.Address                       -- 0x2NNN
+  | SkipIfAddressEqualVal     Memory.Address Byte                  -- 0x3XKK
+  | SkipIfAddressNotEqualVal  Memory.Address Byte                  -- 0x4XKK
+  | SkipIfAddressValsEqual    Memory.Address Memory.Address        -- 0x5XY0
+  | SetAddressTo              Memory.Address Byte                  -- 0x6XKK
+  | AddValToAddress           Memory.Address Byte                  -- 0x7XKK
+  | ReplaceWithAddressVal     Memory.Address Memory.Address        -- 0x8XY0
+  | OrAddressVals             Memory.Address Memory.Address        -- 0x8XY1
+  | AndAddressVals            Memory.Address Memory.Address        -- 0x8XY2
+  | XorAddressVals            Memory.Address Memory.Address        -- 0x8XY3
+  | AddAddressVals            Memory.Address Memory.Address        -- 0x8XY4
+  | SubtractAddressVals       Memory.Address Memory.Address        -- 0x8XY5
+  | RightShiftAddress         Memory.Address                       -- 0x8XY6
+  | SubtractAddressValFrom    Memory.Address Memory.Address        -- 0x8XY7
+  | LeftShiftAddress          Memory.Address                       -- 0x8XYE
+  | SkipIfAddressValsNotEqual Memory.Address Memory.Address        -- 0x9XY0
+  | SetITo                    Slab                                 -- 0xANNN
+  | JumpToPlusV0              Memory.Address Slab                  -- 0xBNNN
+  | SetAddressToMinRandom     Memory.Address Byte                  -- 0xCXKK
+  | DrawSpriteAtCoords        Memory.Address Memory.Address Nibble -- 0xDXYN
+  | SkipIfKeyDown             Memory.Address                       -- 0xEX9E
+  | SkipIfKeyUp               Memory.Address                       -- 0xEXA1
+  | SetAddressToDelayTimer    Memory.Address                       -- 0xFX07
+  | WaitForInput              Memory.Address                       -- 0xFX0A
+  | SetDelayTimerToAddressVal Memory.Address                       -- 0xFX15
+  | SetSoundTimerToAddressVal Memory.Address                       -- 0xFX18
+  | AddAddressValToI          Memory.Address                       -- 0xFX1E
+  | SetIToSpriteNibble        Memory.Address                       -- 0xFX29
+  | StoreAddressValDecimalAtI Memory.Address                       -- 0xFX33
+  | CopyV0ToAddressAtI        Memory.Address                       -- 0xFX55
+  | CopyFromIToV0ToAddress    Memory.Address                       -- 0xFX65

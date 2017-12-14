@@ -2,6 +2,7 @@
 
 module Chipmunk.Timer where
 
+import           Chipmunk.Unit
 import           ClassyPrelude
 
 {- Timers & Sound
@@ -27,6 +28,6 @@ There is only one tone, and the frequency is not specified in the spec.
 -}
 
 data Timers = Timers
-  { getDelay :: Word8
-  , getSound :: Word8
+  { getDelay :: Byte
+  , getSound :: Byte
   }
