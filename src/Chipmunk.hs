@@ -20,9 +20,9 @@ someFunc = putStrLn "someFunc"
 |                            ↓   ↓                        |
 |                         ┌---------┐                     |
 | ┌---------------┐       |         |                     |
-| | Stack Pointer | ←---- |         | ←-------------------┼--- Keyboard                    |
+| | Stack Pointer | ←---- |         | ←-------------------┼--- Keyboard
 | |      |        |       |         |                     |
-| |      └→ Stack | ←---→ |         | --→ Frame Buffer ---┼--→ Hardware Display                    |
+| |      └→ Stack | ←---→ |         | --→ Frame Buffer ---┼--→ Hardware Display
 | └---------------┘       |   CPU   |                     |
 |                         |         |                     |
 |       Delay Timer ←---→ |         | --→ Sound Timer ----┼--→ 1-bit Sound Channel
