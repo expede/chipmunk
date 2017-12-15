@@ -40,9 +40,17 @@ High Byte └---------┘ └---------┘ Low Byte
 
 -}
 
-newtype Nibble = Nibble { getNibble :: Word8  } -- 0000
-newtype Byte   = Byte   { getByte   :: Word8  } -- 0000 0000
-newtype Slab   = Slab   { getSlab   :: Word16 } -- 0000 0000 0000
+newtype Nibble =
+  Nibble { getNibble :: Word8  } -- 0000
+  deriving (Show, Eq)
+
+newtype Byte =
+  Byte { getByte   :: Word8  }   -- 0000 0000
+  deriving (Show, Eq)
+
+newtype Slab =
+  Slab { getSlab   :: Word16 }   -- 0000 0000 0000
+  deriving (Show, Eq)
 
 toNibble :: Word8 -> Nibble
 toNibble byte = Nibble $ byte `rem` 16

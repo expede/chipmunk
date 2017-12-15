@@ -203,8 +203,8 @@ Fx85 - LD Vx, R
 
 data Instruction
   = Ignore                                                         -- 0x0NNN
-  | ClearDisplay                                                   -- 0x00e0
-  | ReturnFromSubroutine                                           -- 0x00ee
+  | ClearDisplay                                                   -- 0x00E0
+  | ReturnFromSubroutine                                           -- 0x00EE
   | JumpTo                    Memory.Address                       -- 0x1NNN
   | CallSubroutineAt          Memory.Address                       -- 0x2NNN
   | SkipIfAddressEqualVal     Memory.Address Byte                  -- 0x3XKK
@@ -237,3 +237,4 @@ data Instruction
   | StoreAddressValDecimalAtI Memory.Address                       -- 0xFX33
   | CopyV0ToAddressAtI        Memory.Address                       -- 0xFX55
   | CopyFromIToV0ToAddress    Memory.Address                       -- 0xFX65
+  deriving (Show, Eq)

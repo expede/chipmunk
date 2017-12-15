@@ -28,6 +28,7 @@ There is only one tone, and the frequency is not specified in the spec.
 -}
 
 data Timers = Timers
-  { getDelay :: Byte
-  , getSound :: Byte
+  { getDelay    :: Byte
+  , getSound    :: Byte
+  , getLastTick :: Int
   }

@@ -1,4 +1,5 @@
-{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE NoImplicitPrelude    #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 
 module Chipmunk.Memory where
 
