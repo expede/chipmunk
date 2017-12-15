@@ -1,10 +1,11 @@
-{-# LANGUAGE NoImplicitPrelude    #-}
-{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 
 module Chipmunk.Memory where
 
+import           Chipmunk.Program
 import           Chipmunk.Unit
 import           ClassyPrelude
+import           Data.Vector      (update_)
 
 {- Memory Layout
 
@@ -19,7 +20,28 @@ Programs intended for the ETI 660 computer started at 0x600 (1536).
 
 type Address = Slab
 
-type Memory = Vector Word8
+type Memory = Vector Doublet
+
+totalSpace :: Int
+totalSpace = 4096
 
 blank :: Memory
-blank = fromList . take 4096 $ repeat 0
+blank = replicate totalSpace 0
+
+startIndex :: Int
+startIndex = 512
+
+startAddress :: Address
+startAddress = toSlab 512
+
+mergeProgram :: Memory -> Program -> Memory
+mergeProgram memory program =
+  update_ memory indexVect program
+
+  where
+    indexVect = fromList $ take (length program) [startIndex..]
+
+loadProgram :: MonadIO m => Memory -> FilePath -> m Memory
+loadProgram memory path = do
+  program <- toProgram <$> fetchProgram path
+  return . mergeProgram memory program

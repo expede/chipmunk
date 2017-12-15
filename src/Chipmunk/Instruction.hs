@@ -237,4 +237,4 @@ data Instruction
   | StoreAddressValDecimalAtI Memory.Address                       -- 0xFX33
   | CopyV0ToAddressAtI        Memory.Address                       -- 0xFX55
   | CopyFromIToV0ToAddress    Memory.Address                       -- 0xFX65
-  deriving (Show, Eq)
+  deriving (Eq, Show)

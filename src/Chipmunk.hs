@@ -3,8 +3,15 @@
 
 module Chipmunk where
 
+import           Chipmunk.Display
+import           Chipmunk.Instruction
+import           Chipmunk.Keyboard
+import           Chipmunk.Memory
+import           Chipmunk.Register
+import           Chipmunk.Timer
+import           Chipmunk.Unit
+
 import           ClassyPrelude
-import           Data.Word
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
@@ -22,7 +29,7 @@ someFunc = putStrLn "someFunc"
 | ┌---------------┐       |         |                     |
 | | Stack Pointer | ←---- |         | ←-------------------┼--- Keyboard
 | |      |        |       |         |                     |
-| |      └→ Stack | ←---→ |         | --→ Frame Buffer ---┼--→ Hardware Display
+| |      └→ Stack | ←---→ |         | --→ Frame Buffer ---┼--→ Display
 | └---------------┘       |   CPU   |                     |
 |                         |         |                     |
 |       Delay Timer ←---→ |         | --→ Sound Timer ----┼--→ 1-bit Sound Channel

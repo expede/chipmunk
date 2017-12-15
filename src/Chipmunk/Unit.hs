@@ -1,14 +1,15 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Chipmunk.Unit
-  ( Nibble ()
-  , Byte   ()
-  , Slab   ()
+  ( Nibble  ()
+  , Byte
+  , Slab    ()
+  , Doublet
   , toNibble
   , getNibble
   , toByte
-  , getByte
   , toSlab
+  , merge
   , getSlab
   , getLowSignifcantNibble
   , getHighInsignifcantNibble
@@ -40,29 +41,30 @@ High Byte └---------┘ └---------┘ Low Byte
 
 -}
 
-newtype Nibble =
-  Nibble { getNibble :: Word8  } -- 0000
-  deriving (Show, Eq)
+newtype Nibble = Nibble { getNibble :: Word8 }
+  deriving (Eq, Ord, Show)
 
-newtype Byte =
-  Byte { getByte   :: Word8  }   -- 0000 0000
-  deriving (Show, Eq)
+type Byte =  Word8
 
-newtype Slab =
-  Slab { getSlab   :: Word16 }   -- 0000 0000 0000
-  deriving (Show, Eq)
+newtype Slab = Slab { getSlab :: Word16 }
+  deriving (Eq, Ord, Show)
 
-toNibble :: Word8 -> Nibble
+type Doublet = Word16
+
+toNibble :: Byte -> Nibble
 toNibble byte = Nibble $ byte `rem` 16
 
-toByte :: Word16 -> Byte
-toByte doublet = Byte . fromIntegral $ doublet `rem` 256
+toByte :: Doublet -> Byte
+toByte = fromIntegral
 
-toSlab :: Word16 -> Slab
+toSlab :: Doublet -> Slab
 toSlab doublet = Slab $ doublet `rem` 4096
 
-getLowSignifcantNibble :: Word16 -> Nibble
+merge :: Byte -> Byte -> Doublet
+merge x y = (shift (fromIntegral x :: Doublet) 8) + (fromIntegral y :: Doublet)
+
+getLowSignifcantNibble :: Doublet -> Nibble
 getLowSignifcantNibble doublet = toNibble . fromIntegral $ doublet `shift` (-8)
 
-getHighInsignifcantNibble :: Word16 -> Nibble
+getHighInsignifcantNibble :: Doublet -> Nibble
 getHighInsignifcantNibble doublet = toNibble . fromIntegral $ doublet `shift` (-4)

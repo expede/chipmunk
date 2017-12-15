@@ -27,6 +27,7 @@ dependencies:
   - lens
   - matrices
   - mtl
+  - vector
 
 library:
   source-dirs: src

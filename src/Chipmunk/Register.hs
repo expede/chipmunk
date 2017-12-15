@@ -2,10 +2,9 @@
 
 module Chipmunk.Register where
 
+import           Chipmunk.Timer
+import           Chipmunk.Unit
 import           ClassyPrelude
-import           Data.Word
-
-import qualified Chipmunk.Timer as T
 
 {- Registers
 
@@ -53,28 +52,30 @@ The 8-bit Stack Pointer (SP) points to the top of the stack.
 -}
 
 data GeneralRegisters = GeneralRegisters
-  { getV0 :: Word16
-  , getV1 :: Word16
-  , getV2 :: Word16
-  , getV3 :: Word16
-  , getV4 :: Word16
-  , getV5 :: Word16
-  , getV6 :: Word16
-  , getV7 :: Word16
-  , getV8 :: Word16
-  , getV9 :: Word16
-  , getVA :: Word16
-  , getVB :: Word16
-  , getVC :: Word16
-  , getVD :: Word16
-  , getVE :: Word16
-  , getVF :: Word16
+  { getV0 :: Doublet
+  , getV1 :: Doublet
+  , getV2 :: Doublet
+  , getV3 :: Doublet
+  , getV4 :: Doublet
+  , getV5 :: Doublet
+  , getV6 :: Doublet
+  , getV7 :: Doublet
+  , getV8 :: Doublet
+  , getV9 :: Doublet
+  , getVA :: Doublet
+  , getVB :: Doublet
+  , getVC :: Doublet
+  , getVD :: Doublet
+  , getVE :: Doublet
+  , getVF :: Doublet
   }
+  deriving (Eq, Show)
 
 data Registers = Registers
   { getGeneral :: GeneralRegisters
-  , getTimers  :: T.Timers
-  , getI       :: Word16
-  , getPC      :: Word16
-  , getSP      :: Word8
+  , getTimers  :: Timers
+  , getI       :: Doublet
+  , getPC      :: Doublet
+  , getSP      :: Byte
   }
+  deriving (Eq, Show)
