@@ -34,7 +34,7 @@ someFunc = putStrLn "someFunc"
 |                         |         |                     |
 |       Delay Timer ←---→ |         | --→ Sound Timer ----┼--→ 1-bit Sound Channel
 |                         |         |                     |
-|   Program Counter ←---→ |         |                     |
+|   Program Counter ←---- |         |                     |
 |          |              |         |                     |
 |          |              └---------┘                     |
 |          |                 ↑    ↑                       |
