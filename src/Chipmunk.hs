@@ -3,13 +3,13 @@
 
 module Chipmunk where
 
-import           Chipmunk.Display
-import           Chipmunk.Instruction
-import           Chipmunk.Keyboard
-import           Chipmunk.Memory
-import           Chipmunk.Register
-import           Chipmunk.Timer
-import           Chipmunk.Unit
+-- import           Chipmunk.Display
+-- import           Chipmunk.Instruction
+-- import           Chipmunk.Keyboard
+-- import           Chipmunk.Memory
+-- import           Chipmunk.Register
+-- import           Chipmunk.Timer
+-- import           Chipmunk.Unit
 
 import           ClassyPrelude
 
