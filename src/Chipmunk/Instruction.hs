@@ -20,7 +20,20 @@ If a sprite is included, it should be padded to aline with RAM.
 ================
 
 +------+--------+------------------+--------------------------------------------+
-| Hex  | Opcode | ne at nnn                      |
+| Hex  | Opcode | Layout           |  Description                               |
++------+--------+------------------+--------------------------------------------+
+| 0nnn | SYS    | addr             | IGNORED IN MODERN INTERPRETERS             |
++------+--------+------------------+--------------------------------------------+
+| 00E0 | CLS    |                  | Clear display                              |
++------+--------+------------------+--------------------------------------------+
+| 00EE | RET    |                  | Return from subroutine                     |
+|      |        |                  |                                            |
+|      |        |                  | 1. Set PC the address on the top of stack  |
+|      |        |                  | 2. Subtract 1 from stack pointer           |
++------+--------+------------------+--------------------------------------------+
+| 1nnn | JP     | addr             | Jump to location nnn. Set PC to nnn.       |
++------+--------+------------------+--------------------------------------------+
+| 2nnn | CALL   | addr             | Call suroutine at nnn                      |
 |      |        |                  |                                            |
 |      |        |                  | 1. Increment stack pointer                 |
 |      |        |                  | 2. Put PC at top of stack                  |
