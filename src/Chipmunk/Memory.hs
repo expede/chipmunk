@@ -44,4 +44,4 @@ mergeProgram memory program =
 loadProgram :: MonadIO m => Memory -> FilePath -> m Memory
 loadProgram memory path = do
   program <- toProgram <$> fetchProgram path
-  return . mergeProgram memory program
+  return $ mergeProgram memory program

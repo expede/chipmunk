@@ -20,20 +20,7 @@ If a sprite is included, it should be padded to aline with RAM.
 ================
 
 +------+--------+------------------+--------------------------------------------+
-| Hex  | Opcode | Layout           |  Description                               |
-+------+--------+------------------+--------------------------------------------+
-| 0nnn | SYS    | addr             | IGNORED IN MODERN INTERPRETERS             |
-+------+--------+------------------+--------------------------------------------+
-| 00E0 | CLS    |                  | Clear display                              |
-+------+--------+------------------+--------------------------------------------+
-| 00EE | RET    |                  | Return from subroutine                     |
-|      |        |                  |                                            |
-|      |        |                  | 1. Set PC the address on the top of stack  |
-|      |        |                  | 2. Subtract 1 from stack pointer           |
-+------+--------+------------------+--------------------------------------------+
-| 1nnn | JP     | addr             | Jump to location nnn. Set PC to nnn.       |
-+------+--------+------------------+--------------------------------------------+
-| 2nnn | CALL   | addr             | Call suroutine at nnn                      |
+| Hex  | Opcode | ne at nnn                      |
 |      |        |                  |                                            |
 |      |        |                  | 1. Increment stack pointer                 |
 |      |        |                  | 2. Put PC at top of stack                  |
@@ -201,40 +188,139 @@ Fx85 - LD Vx, R
 
 -}
 
+type RegisterID = Nibble
+
 data Instruction
   = Ignore                                                         -- 0x0NNN
   | ClearDisplay                                                   -- 0x00E0
   | ReturnFromSubroutine                                           -- 0x00EE
+
   | JumpTo                    Memory.Address                       -- 0x1NNN
   | CallSubroutineAt          Memory.Address                       -- 0x2NNN
-  | SkipIfAddressEqualVal     Memory.Address Byte                  -- 0x3XKK
-  | SkipIfAddressNotEqualVal  Memory.Address Byte                  -- 0x4XKK
-  | SkipIfAddressValsEqual    Memory.Address Memory.Address        -- 0x5XY0
-  | SetAddressTo              Memory.Address Byte                  -- 0x6XKK
-  | AddValToAddress           Memory.Address Byte                  -- 0x7XKK
-  | ReplaceWithAddressVal     Memory.Address Memory.Address        -- 0x8XY0
-  | OrAddressVals             Memory.Address Memory.Address        -- 0x8XY1
-  | AndAddressVals            Memory.Address Memory.Address        -- 0x8XY2
-  | XorAddressVals            Memory.Address Memory.Address        -- 0x8XY3
-  | AddAddressVals            Memory.Address Memory.Address        -- 0x8XY4
-  | SubtractAddressVals       Memory.Address Memory.Address        -- 0x8XY5
-  | RightShiftAddress         Memory.Address                       -- 0x8XY6
-  | SubtractAddressValFrom    Memory.Address Memory.Address        -- 0x8XY7
-  | LeftShiftAddress          Memory.Address                       -- 0x8XYE
-  | SkipIfAddressValsNotEqual Memory.Address Memory.Address        -- 0x9XY0
-  | SetITo                    Slab                                 -- 0xANNN
-  | JumpToPlusV0              Memory.Address Slab                  -- 0xBNNN
-  | SetAddressToMinRandom     Memory.Address Byte                  -- 0xCXKK
-  | DrawSpriteAtCoords        Memory.Address Memory.Address Nibble -- 0xDXYN
-  | SkipIfKeyDown             Memory.Address                       -- 0xEX9E
-  | SkipIfKeyUp               Memory.Address                       -- 0xEXA1
-  | SetAddressToDelayTimer    Memory.Address                       -- 0xFX07
-  | WaitForInput              Memory.Address                       -- 0xFX0A
-  | SetDelayTimerToAddressVal Memory.Address                       -- 0xFX15
-  | SetSoundTimerToAddressVal Memory.Address                       -- 0xFX18
-  | AddAddressValToI          Memory.Address                       -- 0xFX1E
-  | SetIToSpriteNibble        Memory.Address                       -- 0xFX29
-  | StoreAddressValDecimalAtI Memory.Address                       -- 0xFX33
-  | CopyV0ToAddressAtI        Memory.Address                       -- 0xFX55
-  | CopyFromIToV0ToAddress    Memory.Address                       -- 0xFX65
+
+  | SkipIfRegisterEqualVal    RegisterID     Byte                  -- 0x3XKK
+  | SkipIfRegisterNotEqualVal RegisterID     Byte                  -- 0x4XKK
+  | SkipIfRegisterValsEqual   RegisterID     RegisterID            -- 0x5XY0
+  | SetRegisterTo             RegisterID     Byte                  -- 0x6XKK
+  | AddValToRegister          RegisterID     Byte                  -- 0x7XKK
+
+  | ReplaceVxWithVy           RegisterID     RegisterID            -- 0x8XY0
+  | VxOrVy                    RegisterID     RegisterID            -- 0x8XY1
+  | VxAndVy                   RegisterID     RegisterID            -- 0x8XY2
+  | VxXorVy                   RegisterID     RegisterID            -- 0x8XY3
+  | AddVxVy                   RegisterID     RegisterID            -- 0x8XY4
+  | SubtractVxFromVy          RegisterID     RegisterID            -- 0x8XY5
+  | SetVxToRightShiftVy       RegisterID     RegisterID            -- 0x8XY6
+  | SubtractVyFromVx          RegisterID     RegisterID            -- 0x8XY7
+  | SetVxToLeftShiftVy        RegisterID     RegisterID            -- 0x8XYE
+
+  | SkipIfVxNotEqualToVy      RegisterID     RegisterID            -- 0x9XY0
+
+  | SetIToAddressVal          Memory.Address                       -- 0xANNN
+  | JumpToAddressPlusV0       Memory.Address                       -- 0xBNNN
+
+  | SetVxToRandomWithMask     RegisterID     Byte                  -- 0xCXKK
+  | DrawSpriteNAtCoordsVxVy   RegisterID     RegisterID Nibble     -- 0xDXYN
+
+  | SkipIfVxKeyDown           RegisterID                           -- 0xEX9E
+  | SkipIfVxKeyUp             RegisterID                           -- 0xEXA1
+
+  | SetVxToDelayTimer         RegisterID                           -- 0xFX07
+  | WaitForInputAndStoreInVx  RegisterID                           -- 0xFX0A
+  | SetDelayTimerToVx         RegisterID                           -- 0xFX15
+  | SetSoundTimerToVx         RegisterID                           -- 0xFX18
+  | AddVxToI                  RegisterID                           -- 0xFX1E
+  | SetIToSpriteNibbleAtVx    RegisterID                           -- 0xFX29
+  | StoreVxDecimalAtI         RegisterID                           -- 0xFX33
+  | CopyV0ToVxAtI             RegisterID                           -- 0xFX55
+  | CopyFromIIntoV0ToVx       RegisterID                           -- 0xFX65
   deriving (Eq, Show)
+
+nnn :: Doublet -> (Slab -> Instruction) -> Instruction
+nnn num constructor = constructor $ toSlab num
+
+xkk :: Doublet -> (Nibble -> Byte -> Instruction) -> Instruction
+xkk num constructor = constructor (lowSignifcantNibble num) (toByte num)
+
+x :: Doublet -> (Nibble -> Instruction) -> Instruction
+x num constructor = constructor (highInsignifcantNibble num)
+
+xy :: Doublet -> (Nibble -> Nibble -> Instruction) -> Instruction
+xy num constructor = constructor (lowSignifcantNibble num) (highInsignifcantNibble num)
+
+xyn :: Doublet -> (Nibble -> Nibble -> Nibble -> Instruction) -> Instruction
+xyn num constructor =
+  constructor
+    (lowSignifcantNibble num)
+    (highInsignifcantNibble num)
+    (lowestNibble num)
+
+toInstruction :: Doublet -> Maybe Instruction
+toInstruction raw =
+  case getNibble $ highestNibble raw of
+    0  -> case raw of
+           224 -> Just ClearDisplay
+           238 -> Just ReturnFromSubroutine
+           _   -> Just Ignore
+
+    1  -> nnn' JumpTo
+    2  -> nnn' CallSubroutineAt
+
+    3  -> xkk' SkipIfRegisterEqualVal
+    4  -> xkk' SkipIfRegisterNotEqualVal
+
+    5  -> case getNibble . toNibble $ fromIntegral raw of
+           0 -> xy' SkipIfRegisterValsEqual
+           _ -> Nothing
+
+    6  -> xkk' SetRegisterTo
+    7  -> xkk' AddValToRegister
+
+    8  -> case getNibble $ lowestNibble raw of
+           0  -> xy' ReplaceVxWithVy
+
+           1  -> xy' VxOrVy
+           2  -> xy' VxAndVy
+           3  -> xy' VxXorVy
+
+           4  -> xy' AddVxVy
+           5  -> xy' SubtractVxFromVy
+           6  -> xy' SetVxToRightShiftVy
+           7  -> xy' SubtractVyFromVx
+           14 -> xy' SetVxToLeftShiftVy
+
+           _  -> Nothing
+
+    9  -> xy' SkipIfVxNotEqualToVy
+
+    10 -> nnn' SetIToAddressVal
+    11 -> nnn' JumpToAddressPlusV0
+    12 -> xkk' SetVxToRandomWithMask
+
+    13 -> xyn' DrawSpriteNAtCoordsVxVy
+
+    14 -> case toByte raw of
+           158 -> x' SkipIfVxKeyDown
+           161 -> x' SkipIfVxKeyUp
+           _   -> Nothing
+
+    15 -> case toByte raw of
+           7   -> x' SetDelayTimerToVx
+           10  -> x' WaitForInputAndStoreInVx
+           21  -> x' SetDelayTimerToVx
+           24  -> x' SetSoundTimerToVx
+           30  -> x' AddVxToI
+           41  -> x' SetIToSpriteNibbleAtVx
+           51  -> x' StoreVxDecimalAtI
+           85  -> x' CopyV0ToVxAtI
+           101 -> x' CopyFromIIntoV0ToVx
+           _   -> Nothing
+
+    _  -> Nothing
+
+    where
+      x'   = Just . x   raw
+      xy'  = Just . xy  raw
+      xyn' = Just . xyn raw
+      xkk' = Just . xkk raw
+      nnn' = Just . nnn raw

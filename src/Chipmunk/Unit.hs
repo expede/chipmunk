@@ -11,8 +11,10 @@ module Chipmunk.Unit
   , toSlab
   , merge
   , getSlab
-  , getLowSignifcantNibble
-  , getHighInsignifcantNibble
+  , highestNibble
+  , lowestNibble
+  , lowSignifcantNibble
+  , highInsignifcantNibble
   ) where
 
 import           ClassyPrelude
@@ -63,8 +65,14 @@ toSlab doublet = Slab $ doublet `rem` 4096
 merge :: Byte -> Byte -> Doublet
 merge x y = (shift (fromIntegral x :: Doublet) 8) + (fromIntegral y :: Doublet)
 
-getLowSignifcantNibble :: Doublet -> Nibble
-getLowSignifcantNibble doublet = toNibble . fromIntegral $ doublet `shift` (-8)
+highestNibble :: Doublet -> Nibble
+highestNibble doublet = toNibble . fromIntegral $ doublet `shift` (-12)
 
-getHighInsignifcantNibble :: Doublet -> Nibble
-getHighInsignifcantNibble doublet = toNibble . fromIntegral $ doublet `shift` (-4)
+lowestNibble :: Doublet -> Nibble
+lowestNibble doublet = toNibble . fromIntegral $ doublet
+
+lowSignifcantNibble :: Doublet -> Nibble
+lowSignifcantNibble doublet = lowestNibble $ doublet `shift` (-8)
+
+highInsignifcantNibble :: Doublet -> Nibble
+highInsignifcantNibble doublet = toNibble . fromIntegral $ doublet `shift` (-4)

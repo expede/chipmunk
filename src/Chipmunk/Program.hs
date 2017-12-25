@@ -1,6 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Chipmunk.Memory where
+module Chipmunk.Program where
 
 import           Chipmunk.Unit
 import           ClassyPrelude
