@@ -236,25 +236,6 @@ data Instruction
   | CopyFromIIntoV0ToVx       RegisterID                           -- 0xFX65
   deriving (Eq, Show)
 
-nnn :: Doublet -> (Slab -> Instruction) -> Instruction
-nnn num constructor = constructor $ toSlab num
-
-xkk :: Doublet -> (Nibble -> Byte -> Instruction) -> Instruction
-xkk num constructor = constructor (lowSignifcantNibble num) (toByte num)
-
-x :: Doublet -> (Nibble -> Instruction) -> Instruction
-x num constructor = constructor (highInsignifcantNibble num)
-
-xy :: Doublet -> (Nibble -> Nibble -> Instruction) -> Instruction
-xy num constructor = constructor (lowSignifcantNibble num) (highInsignifcantNibble num)
-
-xyn :: Doublet -> (Nibble -> Nibble -> Nibble -> Instruction) -> Instruction
-xyn num constructor =
-  constructor
-    (lowSignifcantNibble num)
-    (highInsignifcantNibble num)
-    (lowestNibble num)
-
 toInstruction :: Doublet -> Maybe Instruction
 toInstruction raw =
   case getNibble $ highestNibble raw of
@@ -324,3 +305,22 @@ toInstruction raw =
       xyn' = Just . xyn raw
       xkk' = Just . xkk raw
       nnn' = Just . nnn raw
+
+x :: Doublet -> (Nibble -> Instruction) -> Instruction
+x num constructor = constructor (highInsignifcantNibble num)
+
+xy :: Doublet -> (Nibble -> Nibble -> Instruction) -> Instruction
+xy num constructor = constructor (lowSignifcantNibble num) (highInsignifcantNibble num)
+
+xyn :: Doublet -> (Nibble -> Nibble -> Nibble -> Instruction) -> Instruction
+xyn num constructor =
+  constructor
+    (lowSignifcantNibble num)
+    (highInsignifcantNibble num)
+    (lowestNibble num)
+
+xkk :: Doublet -> (Nibble -> Byte -> Instruction) -> Instruction
+xkk num constructor = constructor (lowSignifcantNibble num) (toByte num)
+
+nnn :: Doublet -> (Slab -> Instruction) -> Instruction
+nnn num constructor = constructor $ toSlab num
