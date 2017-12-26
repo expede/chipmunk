@@ -53,7 +53,7 @@ The 8-bit Stack Pointer (SP) points to the top of the stack.
 
 type ID = Nibble
 
-data GeneralRegisters = GeneralRegisters
+data Registers = Registers
   { getV0 :: Doublet
   , getV1 :: Doublet
   , getV2 :: Doublet
@@ -70,20 +70,12 @@ data GeneralRegisters = GeneralRegisters
   , getVD :: Doublet
   , getVE :: Doublet
   , getVF :: Doublet
+  , getI  :: Doublet
   }
   deriving (Eq, Show)
 
-data Registers = Registers
-  { getGeneral :: GeneralRegisters
-  , getTimers  :: Timers
-  , getI       :: Doublet
-  , getPC      :: Doublet
-  , getSP      :: Byte
-  }
-  deriving (Eq, Show)
-
-unsafeLookup :: Nibble -> (GeneralRegisters -> Doublet)
-unsafeLookup registerID =
+lookup :: Nibble -> (Registers -> Doublet)
+lookup registerID =
   case getNibble registerID of
     0  -> getV0
     1  -> getV1

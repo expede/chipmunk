@@ -22,11 +22,15 @@ Programs intended for the ETI 660 computer started at 0x600 (1536).
 │               │        │
 ├---------------┤        │
 │               │        │
-│ Program       │        │
+│    Program    │        │
 │               │ 0x200  │
 ├───────────────┼────────┤
 │               │ 0x1FF  │
-│ Interpreter   │        │
+│  Interpreter  │        │
+│               │ 0x081  │
+├───────────────┼────────┤
+│               │ 0x080  │
+│  Font Sprites │        │
 │               │ 0x000  │
 └───────────────┴────────┘
 
