@@ -16,6 +16,20 @@ The first 512 bytes (0x000 - 0x1FF) are reserved the interpreter.
 As such, most programs begin at 0x200 (512).
 Programs intended for the ETI 660 computer started at 0x600 (1536).
 
+┌───────────────┬────────┐
+│               │ 0xFFF  │
+│ Address Space │        │
+│               │        │
+├---------------┤        │
+│               │        │
+│ Program       │        │
+│               │ 0x200  │
+├───────────────┼────────┤
+│               │ 0x1FF  │
+│ Interpreter   │        │
+│               │ 0x000  │
+└───────────────┴────────┘
+
 -}
 
 type Address = Slab

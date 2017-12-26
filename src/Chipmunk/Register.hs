@@ -51,6 +51,8 @@ The 16-bit Program Counter (PC) holds the currently executing address.
 The 8-bit Stack Pointer (SP) points to the top of the stack.
 -}
 
+type ID = Nibble
+
 data GeneralRegisters = GeneralRegisters
   { getV0 :: Doublet
   , getV1 :: Doublet
@@ -79,3 +81,24 @@ data Registers = Registers
   , getSP      :: Byte
   }
   deriving (Eq, Show)
+
+unsafeLookup :: Nibble -> (GeneralRegisters -> Doublet)
+unsafeLookup registerID =
+  case getNibble registerID of
+    0  -> getV0
+    1  -> getV1
+    2  -> getV2
+    3  -> getV3
+    4  -> getV4
+    5  -> getV5
+    6  -> getV6
+    7  -> getV7
+    8  -> getV8
+    9  -> getV9
+    10 -> getVA
+    11 -> getVB
+    12 -> getVC
+    13 -> getVD
+    14 -> getVE
+    15 -> getVF
+    e  -> error $ "No such register: " ++ show e

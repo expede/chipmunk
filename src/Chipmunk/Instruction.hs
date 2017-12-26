@@ -2,7 +2,8 @@
 
 module Chipmunk.Instruction where
 
-import qualified Chipmunk.Memory as Memory
+import qualified Chipmunk.Memory   as Memory
+import qualified Chipmunk.Register as Register
 import           Chipmunk.Unit
 import           ClassyPrelude
 
@@ -201,52 +202,50 @@ Fx85 - LD Vx, R
 
 -}
 
-type RegisterID = Nibble
-
 data Instruction
-  = Ignore                                                         -- 0x0NNN
-  | ClearDisplay                                                   -- 0x00E0
-  | ReturnFromSubroutine                                           -- 0x00EE
+  = Ignore                                                      -- 0x0NNN
+  | ClearDisplay                                                -- 0x00E0
+  | ReturnFromSubroutine                                        -- 0x00EE
 
-  | JumpTo                    Memory.Address                       -- 0x1NNN
-  | CallSubroutineAt          Memory.Address                       -- 0x2NNN
+  | JumpTo                    Memory.Address                    -- 0x1NNN
+  | CallSubroutineAt          Memory.Address                    -- 0x2NNN
 
-  | SkipIfRegisterEqualVal    RegisterID     Byte                  -- 0x3XKK
-  | SkipIfRegisterNotEqualVal RegisterID     Byte                  -- 0x4XKK
-  | SkipIfRegisterValsEqual   RegisterID     RegisterID            -- 0x5XY0
-  | SetRegisterTo             RegisterID     Byte                  -- 0x6XKK
-  | AddValToRegister          RegisterID     Byte                  -- 0x7XKK
+  | SkipIfRegisterEqualVal    Register.ID    Byte               -- 0x3XKK
+  | SkipIfRegisterNotEqualVal Register.ID    Byte               -- 0x4XKK
+  | SkipIfRegisterValsEqual   Register.ID    Register.ID        -- 0x5XY0
+  | SetRegisterTo             Register.ID    Byte               -- 0x6XKK
+  | AddValToRegister          Register.ID    Byte               -- 0x7XKK
 
-  | ReplaceVxWithVy           RegisterID     RegisterID            -- 0x8XY0
-  | VxOrVy                    RegisterID     RegisterID            -- 0x8XY1
-  | VxAndVy                   RegisterID     RegisterID            -- 0x8XY2
-  | VxXorVy                   RegisterID     RegisterID            -- 0x8XY3
-  | AddVxVy                   RegisterID     RegisterID            -- 0x8XY4
-  | SubtractVxFromVy          RegisterID     RegisterID            -- 0x8XY5
-  | SetVxToRightShiftVy       RegisterID     RegisterID            -- 0x8XY6
-  | SubtractVyFromVx          RegisterID     RegisterID            -- 0x8XY7
-  | SetVxToLeftShiftVy        RegisterID     RegisterID            -- 0x8XYE
+  | ReplaceVxWithVy           Register.ID    Register.ID        -- 0x8XY0
+  | VxOrVy                    Register.ID    Register.ID        -- 0x8XY1
+  | VxAndVy                   Register.ID    Register.ID        -- 0x8XY2
+  | VxXorVy                   Register.ID    Register.ID        -- 0x8XY3
+  | AddVxVy                   Register.ID    Register.ID        -- 0x8XY4
+  | SubtractVxFromVy          Register.ID    Register.ID        -- 0x8XY5
+  | SetVxToRightShiftVy       Register.ID    Register.ID        -- 0x8XY6
+  | SubtractVyFromVx          Register.ID    Register.ID        -- 0x8XY7
+  | SetVxToLeftShiftVy        Register.ID    Register.ID        -- 0x8XYE
 
-  | SkipIfVxNotEqualToVy      RegisterID     RegisterID            -- 0x9XY0
+  | SkipIfVxNotEqualToVy      Register.ID    Register.ID        -- 0x9XY0
 
-  | SetIToAddressVal          Memory.Address                       -- 0xANNN
-  | JumpToAddressPlusV0       Memory.Address                       -- 0xBNNN
+  | SetIToAddressVal          Memory.Address                    -- 0xANNN
+  | JumpToAddressPlusV0       Memory.Address                    -- 0xBNNN
 
-  | SetVxToRandomWithMask     RegisterID     Byte                  -- 0xCXKK
-  | DrawSpriteNAtCoordsVxVy   RegisterID     RegisterID Nibble     -- 0xDXYN
+  | SetVxToRandomWithMask     Register.ID    Byte               -- 0xCXKK
+  | DrawSpriteNAtCoordsVxVy   Register.ID    Register.ID Nibble -- 0xDXYN
 
-  | SkipIfVxKeyDown           RegisterID                           -- 0xEX9E
-  | SkipIfVxKeyUp             RegisterID                           -- 0xEXA1
+  | SkipIfVxKeyDown           Register.ID                       -- 0xEX9E
+  | SkipIfVxKeyUp             Register.ID                       -- 0xEXA1
 
-  | SetVxToDelayTimer         RegisterID                           -- 0xFX07
-  | WaitForInputAndStoreInVx  RegisterID                           -- 0xFX0A
-  | SetDelayTimerToVx         RegisterID                           -- 0xFX15
-  | SetSoundTimerToVx         RegisterID                           -- 0xFX18
-  | AddVxToI                  RegisterID                           -- 0xFX1E
-  | SetIToSpriteNibbleAtVx    RegisterID                           -- 0xFX29
-  | StoreVxDecimalAtI         RegisterID                           -- 0xFX33
-  | CopyV0ToVxAtI             RegisterID                           -- 0xFX55
-  | CopyFromIIntoV0ToVx       RegisterID                           -- 0xFX65
+  | SetVxToDelayTimer         Register.ID                       -- 0xFX07
+  | WaitForInputAndStoreInVx  Register.ID                       -- 0xFX0A
+  | SetDelayTimerToVx         Register.ID                       -- 0xFX15
+  | SetSoundTimerToVx         Register.ID                       -- 0xFX18
+  | AddVxToI                  Register.ID                       -- 0xFX1E
+  | SetIToSpriteNibbleAtVx    Register.ID                       -- 0xFX29
+  | StoreVxDecimalAtI         Register.ID                       -- 0xFX33
+  | CopyV0ToVxAtI             Register.ID                       -- 0xFX55
+  | CopyFromIIntoV0ToVx       Register.ID                       -- 0xFX65
   deriving (Eq, Show)
 
 toInstruction :: Doublet -> Maybe Instruction
